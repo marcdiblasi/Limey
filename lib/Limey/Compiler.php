@@ -27,7 +27,7 @@ class Limey_Compiler {
 
         $parsers = $this->loadParsers();
         $affects = $this->loadAffects($parsers);
-        
+
         $tokens = token_get_all($this->codeString);
 
         $newCode = '';
@@ -42,6 +42,8 @@ class Limey_Compiler {
                 continue;
             }
 
+            $token[0] = token_name($token[0]);
+
             if (isset($affects[$token[0]])) {
                 foreach ($affects[$token[0]] as $parser) {
                     $token = $parser->parse($token);
@@ -53,21 +55,36 @@ class Limey_Compiler {
             } else {
                 $newCode .= $token;
             }
-
-            $token[0] = token_name($token[0]);
-            var_dump($index, $token);
         }
 
         return $newCode;
     }
 
     private function loadParsers() {
+        require_once dirname(__FILE__) . '/Parser.php';
+
         $parserDirectory = dirname(__FILE__) . '/Parsers';
 
         $files = glob($parserDirectory . '/*');
+        $parsers = array();
         foreach ($files as $file) {
-            var_dump(1,$file);
+            $fileFixed = preg_replace(
+                array(
+                    '/^' . preg_quote($parserDirectory, '/') . '\//',
+                    '/\.php$/',
+                ),
+                '',
+                $file
+            );
+
+            require_once $file;
+        
+            $className = "Limey_Parsers_$fileFixed";
+            $parser = new $className();
+            $parsers[] = $parser;
         }
+
+        return $parsers;
     }
 
     private function loadAffects($parsers) {
@@ -84,5 +101,7 @@ class Limey_Compiler {
                 }
             }
         }
+
+        return $affects;
     }
 }

@@ -17,8 +17,6 @@ $compiler->loadFile($_SERVER['argv'][1]);
 
 $output = $compiler->run();
 
-var_dump($_SERVER['argv']);
-
 if (count($_SERVER['argv']) > 1) {
     file_put_contents($_SERVER['argv'][2], $output);
 } else {

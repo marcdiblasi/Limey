@@ -5,11 +5,11 @@ abstract class Limey_Parser {
 
     abstract public function parse($input);
 
-    protected function getAffects() {
+    public function getAffects() {
         return $this->affects;
     }
 
-    protected function setAffects($value){
+    public function setAffects($value){
         $this->affects = $value;
     }
 }
