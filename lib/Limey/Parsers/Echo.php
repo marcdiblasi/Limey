@@ -1,11 +1,12 @@
 <?php
 
 class Limey_Parsers_Echo extends Limey_Parser {
-    protected $affects = array('T_ECHO');
+    protected $affects = array('T_STRING');
     
     public function parse($input) {
-        $input[1] = 'announce';
-
+        if ('announce' === $input[1]) {
+            $input[1] = 'echo';
+        }
         return $input;
     }
 }
