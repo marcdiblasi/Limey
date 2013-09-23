@@ -27,7 +27,7 @@ class Limey_Compiler {
 
         $parsers = $this->loadParsers();
         $affects = $this->loadAffects($parsers);
-
+        
         $tokens = token_get_all($this->codeString);
 
         $newCode = '';
@@ -95,7 +95,7 @@ class Limey_Compiler {
 
             foreach ($newAffects as $newAffect) {
                 if (isset($affects[$newAffect])) {
-                    $affects[$newAffect][] = $newAffect;
+                    $affects[$newAffect][] = $parser;
                 } else {
                     $affects[$newAffect] = array($parser);
                 }
